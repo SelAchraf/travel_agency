@@ -1,0 +1,25 @@
+{
+  "name": "algerian-travel-agency-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-grade travel agency website and back-office platform for Algeria",
+  "scripts": {
+    "dev": "pnpm -r --parallel run --if-present dev",
+    "dev:api": "pnpm --filter @travel-agency/api run dev",
+    "dev:admin": "pnpm --filter @travel-agency/admin run dev",
+    "dev:web": "pnpm --filter @travel-agency/web run dev",
+    "build": "pnpm --filter \"@travel-agency/*\" run build",
+    "typecheck": "pnpm --filter \"@travel-agency/*\" run typecheck",
+    "lint": "pnpm --filter \"@travel-agency/*\" run lint",
+    "test": "pnpm --filter \"@travel-agency/*\" run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "seed": "pnpm --filter @travel-agency/api run seed"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.0",
+    "typescript": "^5.7.3"
+  }
+}

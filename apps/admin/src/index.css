@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-sand-50: #FAF8F5;
+    --color-sand-100: #F3EFEA;
+    --color-sand-200: #E6DFD5;
+    --color-indigo-900: #0D233A;
+    --color-indigo-950: #071524;
+    --color-terracotta-500: #C85A32;
+    --color-saffron-500: #E09F3E;
+    --color-mint-500: #2A9D8F;
+  }
+
+  body {
+    background-color: var(--color-sand-50);
+    color: var(--color-indigo-950);
+  }
+}
+

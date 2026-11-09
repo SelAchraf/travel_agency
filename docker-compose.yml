@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: travel_agency_postgres
+    restart: unless-stopped
+    ports:
+      - "${DOCKER_PG_PORT:-5433}:5432"
+    environment:
+      POSTGRES_USER: travel_user
+      POSTGRES_PASSWORD: travel_password_secure_2026
+      POSTGRES_DB: travel_agency
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U travel_user -d travel_agency"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  postgres_data:
+    driver: local
