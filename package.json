@@ -9,7 +9,7 @@
     "dev:admin": "pnpm --filter @travel-agency/admin run dev",
     "dev:web": "pnpm --filter @travel-agency/web run dev",
     "build": "pnpm --filter \"@travel-agency/*\" run build",
-    "typecheck": "pnpm --filter \"@travel-agency/*\" run typecheck",
+    "typecheck": "pnpm --filter @travel-agency/shared run build && pnpm --filter \"@travel-agency/*\" run typecheck",
     "lint": "pnpm --filter \"@travel-agency/*\" run lint",
     "test": "pnpm --filter \"@travel-agency/*\" run test",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
