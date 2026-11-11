@@ -21,6 +21,12 @@ import adminCustomerRouter from "./routes/admin/customer.routes.js";
 import adminEnquiryRouter from "./routes/admin/enquiry.routes.js";
 import adminReservationRouter from "./routes/admin/reservation.routes.js";
 import adminPaymentRouter from "./routes/admin/payment.routes.js";
+import adminDashboardRouter from "./routes/admin/dashboard.routes.js";
+import adminDocumentRouter from "./routes/admin/document.routes.js";
+import adminReportRouter from "./routes/admin/report.routes.js";
+import adminDepartureRouter from "./routes/admin/departure.routes.js";
+import adminNotificationRouter from "./routes/admin/notification.routes.js";
+import portalRouter from "./routes/portal/portal.routes.js";
 
 export function createApp(): Express {
   const app = express();
@@ -185,6 +191,12 @@ export function createApp(): Express {
   app.use("/api/v1/admin/enquiries", adminEnquiryRouter);
   app.use("/api/v1/admin/reservations", adminReservationRouter);
   app.use("/api/v1/admin/payments", adminPaymentRouter);
+  app.use("/api/v1/admin/dashboard", adminDashboardRouter);
+  app.use("/api/v1/admin/documents", adminDocumentRouter);
+  app.use("/api/v1/admin/reports", adminReportRouter);
+  app.use("/api/v1/admin/departures", adminDepartureRouter);
+  app.use("/api/v1/admin/notifications", adminNotificationRouter);
+  app.use("/api/v1/portal", portalRouter);
 
   // 10. 404 Route Handler
   app.use((req: Request, _res: Response, next) => {

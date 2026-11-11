@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../LanguageSwitcher.js";
+import { NotificationBell } from "./NotificationBell.js";
 import { Badge } from "../ui/Badge.js";
 import { Button } from "../ui/Button.js";
 import { ROLE_LABELS } from "@travel-agency/shared";
@@ -19,6 +20,9 @@ import {
   Contact,
   CalendarCheck,
   Receipt,
+  LayoutDashboard,
+  FileText,
+  BarChart3,
 } from "lucide-react";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -38,9 +42,21 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   const navLinks = [
     {
+      to: "/admin/dashboard",
+      label: t("common.dashboard"),
+      icon: LayoutDashboard,
+      permission: "reports:operational" as const,
+    },
+    {
       to: "/admin/offers",
       label: t("common.offers"),
       icon: MapPin,
+      permission: "offers:read" as const,
+    },
+    {
+      to: "/admin/departures",
+      label: t("common.departures"),
+      icon: Compass,
       permission: "offers:read" as const,
     },
     {
@@ -66,6 +82,18 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       label: t("common.payments"),
       icon: Receipt,
       permission: "payments:read" as const,
+    },
+    {
+      to: "/admin/documents",
+      label: t("common.documents"),
+      icon: FileText,
+      permission: undefined,
+    },
+    {
+      to: "/admin/reports",
+      label: t("common.reports"),
+      icon: BarChart3,
+      permission: undefined,
     },
     {
       to: "/admin/users",
@@ -144,8 +172,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          {/* Right Controls: User info, Language Switcher, Logout */}
+          {/* Right Controls: User info, Notifications, Language Switcher, Logout */}
           <div className="flex items-center gap-3">
+            <NotificationBell />
             <LanguageSwitcher />
 
             {user && (

@@ -16,7 +16,9 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
-    "seed": "pnpm --filter @travel-agency/api run seed"
+    "seed": "pnpm --filter @travel-agency/api run seed",
+    "backup": "./scripts/backup.sh --with-files",
+    "restore": "./scripts/restore.sh"
   },
   "devDependencies": {
     "prettier": "^3.5.0",

@@ -34,11 +34,16 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     }
   }
 
+  const defaultHeaders: Record<string, string> = {};
+  if (!(options.body instanceof FormData)) {
+    defaultHeaders["Content-Type"] = "application/json";
+  }
+
   const config: RequestInit = {
     method: options.method || "GET",
     credentials: "include", // Transmit httpOnly cookies
     headers: {
-      "Content-Type": "application/json",
+      ...defaultHeaders,
       ...headers,
     },
     ...customConfig,

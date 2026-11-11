@@ -60,3 +60,30 @@ export function generatePasswordResetToken(): {
   return { token, tokenHash, expiresAt };
 }
 
+export interface PortalTokenPayload {
+  sub: string; // customerId
+  type: "portal";
+  fullName: string;
+}
+
+export function generatePortalAccessToken(payload: PortalTokenPayload): string {
+  return jwt.sign(payload, env.JWT_ACCESS_SECRET, {
+    expiresIn: "7d",
+    issuer: "travel_agency_platform",
+    audience: "travel_agency_portal",
+  });
+}
+
+export function verifyPortalAccessToken(token: string): PortalTokenPayload {
+  const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET, {
+    issuer: "travel_agency_platform",
+    audience: "travel_agency_portal",
+  }) as PortalTokenPayload;
+
+  if (decoded.type !== "portal") {
+    throw new Error("Invalid token type");
+  }
+  return decoded;
+}
+
+

@@ -1,0 +1,791 @@
+ALGERIAN TRAVEL AGENCY
+Website & Management Platform
+Functional Requirements & Product Scope
+
+A practical specification for a website you can build, demonstrate, and sell to a travel agency in
+Algeria.
+
+Product type
+
+Public travel website + private agency back-office + optional customer portal
+
+Primary market
+
+Small and medium-sized travel agencies in Algeria
+
+Languages
+
+Arabic (RTL), French (LTR), with English as an optional later addition
+
+Currency
+
+Algerian dinar (DZD / DA)
+
+Delivery approach
+
+Start with a manageable MVP; add integrations and advanced workflows later
+
+Prepared as a product-planning document • Version 1.0 • November 2026
+
+1. Product vision
+The product should help a travel agency present its services online and manage the daily work behind those services
+from one system.
+Recommended product: a responsive public website connected to a secure administration dashboard. Customers
+discover trips and submit booking requests; agency employees manage customers, offers, reservations, documents and
+payments.
+Important scope decision: the first version should manage booking requests and agency-confirmed reservations. It
+does not need to issue airline tickets, connect to live airline inventory, or guarantee live hotel availability. Those
+integrations are separate, more complex projects.
+The platform should be configurable for each agency: its name, logo, contact details, branches, services,
+branding, languages and published offers.
+
+1.1 Main goals
+• Give the agency a professional online presence that works well on phones.
+• Turn website visitors into enquiries and booking requests.
+• Keep customer, reservation, payment and document information organized.
+• Reduce duplicate data entry, paper tracking and spreadsheet dependence.
+• Give the owner a clear overview of bookings, outstanding balances and upcoming departures.
+
+1.2 User groups
+User
+
+Main needs
+
+Website visitor
+
+Discover destinations, services, offers, agency details and contact options.
+
+Customer
+
+Send a request, provide required details, upload documents when requested, and check
+booking progress.
+
+Agency employee
+
+Manage enquiries, customers, offers, reservations, documents and payments.
+
+Agency manager / owner
+
+Manage staff access, business settings, reports, financial overview and operational
+activity.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 2
+
+2. Public website functionalities
+This is the part visible to everyone. It should be fast, trustworthy, mobile-friendly and easy for agency staff to update.
+
+2.1 Essential pages
+Page
+
+Required functionality
+
+Home
+
+Agency introduction, featured offers, popular destinations, services, trust indicators and clear
+enquiry/WhatsApp calls to action.
+
+About the agency
+
+Agency profile, experience, values, licence/accreditation details where applicable, address
+and branches.
+
+Travel offers
+
+Searchable/filterable list of published trips and packages, with price, dates, destination and
+availability label.
+
+Offer details
+
+Description, itinerary, departure/return dates, price, included/excluded services,
+accommodation details, conditions, gallery and enquiry form.
+
+Services
+
+Separate pages for tourism, domestic trips, international trips, hotel reservations, visa
+assistance, Umrah/Hajj services if offered, and other agency services.
+
+Destinations
+
+Destination pages with descriptions, photos, travel information and linked offers.
+
+Contact
+
+Phone numbers, WhatsApp link, email, office address, map, opening hours and contact form.
+
+FAQ
+
+Answers to common questions about booking, payment, documents, cancellation and travel
+conditions.
+
+Legal pages
+
+Privacy notice, website terms, booking conditions and cookie notice if applicable.
+
+2.2 Travel offer catalogue
+• Staff can create, edit, publish, unpublish and archive offers.
+• Each offer can have destination, trip type, start/end dates, duration, price in DZD, pricing basis (per person, room, family,
+etc.), capacity, hotel/accommodation, transport details and description.
+• Support photos, itinerary/day-by-day programme, included services, excluded services and downloadable brochure.
+• Display clear offer states such as Available, Limited places, Request availability and Fully booked. Do not show live
+availability unless the agency actually maintains it.
+• Allow filters such as destination, trip type, date range and budget where the agency has enough offers to justify them.
+
+2.3 Enquiry and booking request forms
+• Collect the customer's name, phone number, email (optional or required by agency policy), selected offer, number of
+travellers, preferred dates and message.
+• Validate required fields and show a clear confirmation after submission.
+• Create an enquiry record in the dashboard and notify the responsible agency staff.
+• Record consent to the privacy notice where required.
+• Clearly explain that submitting a request is not a confirmed reservation until the agency confirms it.
+
+2.4 Trust, usability and conversion
+• Prominent phone and WhatsApp contact actions on mobile.
+• Real agency address, map, office hours and verified contact details.
+• Testimonials only when genuine and approved for publication.
+• Clear prices, conditions, inclusions and exclusions; avoid hidden fees.
+• Accessible typography, readable contrast, optimized images and simple navigation.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 3
+
+3. Agency administration dashboard
+The back-office is the core operational product. Only authenticated and authorized staff should access it.
+
+3.1 Dashboard overview
+• Show enquiries awaiting response, active reservations, upcoming departures and tasks requiring attention.
+• Show total payments received and outstanding customer balances for a selected period.
+• Provide shortcuts to add a customer, create an offer, register a reservation and record a payment.
+• Allow filtering by date, employee, trip and reservation status.
+
+3.2 Customer / CRM management
+• Create, view, edit, archive and search customer profiles.
+• Store name, contact details, preferred language and internal notes.
+• Store traveller information only when needed for a booking, with restricted access to sensitive fields.
+• View a customer's enquiries, reservations, payments and relevant documents in one history.
+• Detect likely duplicate customers by phone number or email and let staff review matches.
+
+3.3 Enquiry management
+• Receive requests submitted through the website and allow staff to create enquiries manually (phone, walk-in or
+WhatsApp).
+• Assign an enquiry to an employee and set a follow-up date.
+• Track status: New, Contacted, Waiting for customer, Converted, Rejected or Closed.
+• Keep a timestamped activity history and internal notes.
+
+3.4 Reservation management
+• Create a reservation from an enquiry or directly from the dashboard.
+• Link the reservation to a customer, offer, travellers and responsible employee.
+• Store booking date, travel dates, passenger count, agreed price, discount if authorized and special requirements.
+• Track status: Pending, Awaiting documents, Awaiting payment, Confirmed, Cancelled or Completed.
+• Generate a reservation reference number and printable confirmation.
+• Maintain a history of status changes; do not silently overwrite important changes.
+
+3.5 Group trips and capacity
+• Create a departure/group linked to an offer, with departure date, return date and maximum capacity.
+• Track booked places, available places and a waiting list if needed.
+• Prevent staff from confirming more places than the configured capacity unless a manager explicitly overrides it.
+• Allow one offer to have multiple departure dates.
+
+3.6 Payment tracking
+• Record an agreed total price, deposits, subsequent instalments and remaining balance.
+• Record payment date, amount, method, reference and employee who entered it.
+• Support cash, bank transfer and other payment methods configured by the agency.
+• Generate a receipt for each recorded payment and show the payment history.
+• Flag overdue or incomplete balances based on agency-defined due dates.
+• Keep an audit trail for edits, cancellations and refunds.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 4
+
+The first release can record payments manually. Online card payment, bank reconciliation and automated
+payment confirmation should be treated as later integrations.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 5
+
+4. Documents, employees and reports
+4.1 Document management
+• Attach files to a customer or reservation, with document type, upload date, expiry date (if relevant) and status.
+• Examples: passport copy, identity document, visa-related file, contract, itinerary, insurance document and payment receipt.
+• Use private storage; never expose uploaded identity or passport documents through public URLs.
+• Restrict document access by role and log sensitive access or changes where practical.
+• Support download, replacement and deletion according to the agency's retention policy and applicable law.
+
+4.2 Employee and access management
+Role
+
+Suggested permissions
+
+Owner / Administrator
+
+All modules, agency settings, users, reports and permission management.
+
+Manager
+
+Operational modules, staff assignments, reports and approved overrides.
+
+Reservation agent
+
+Customers, enquiries, offers (if permitted), reservations and trip documents.
+
+Finance employee
+
+Payment records, receipts, balances and financial reports; limited access to unrelated
+documents.
+
+Content editor
+
+Public website pages, destinations, images and offers; no access to private
+financial/customer records unless explicitly granted.
+
+Use role-based access control (RBAC), individual staff accounts, secure password handling, session management and
+account deactivation when an employee leaves.
+
+4.3 Reports and exports
+• Reservations by period, destination, offer and status.
+• Revenue collected versus amounts still due; clearly distinguish cash received from booked sales.
+• Upcoming departures, passenger lists and capacity summaries.
+• Enquiry conversion: received, followed up, converted and closed.
+• Export permitted data to CSV or PDF for operational use.
+• Apply date filters and restrict financial reports to authorized roles.
+
+4.4 Notifications and communication
+• In-dashboard alerts for new enquiries, upcoming departures, missing documents and due payments.
+• Email notifications for enquiry receipt and reservation updates if email is configured.
+• WhatsApp click-to-chat links with prefilled message templates; sending automated WhatsApp messages requires an
+approved provider/API and setup.
+• Allow staff to record that a customer was contacted and when.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 6
+
+5. Optional customer portal
+The portal can be delivered after the public website and agency dashboard are working. It adds value but should not
+delay the first usable release.
+• Customer receives a secure invitation or booking link associated with their reservation.
+• Customer can view reservation reference, trip details, current status and payment balance.
+• Customer can upload requested documents through a protected upload flow.
+• Customer can download confirmation, itinerary and receipts.
+• Customer can submit a question or request a correction.
+• The portal must show only that customer's information and must not expose other travellers' records.
+
+6. Algeria-specific requirements
+Area
+
+Requirement / design consideration
+
+Languages
+
+Arabic and French at minimum; Arabic pages use proper right-to-left layout, French pages use
+left-to-right layout. Keep translations manageable in the admin system.
+
+Currency
+
+Display DZD / DA consistently. Store amounts as decimal values and keep currency explicit in
+financial records.
+
+Contact details
+
+Support Algerian mobile/landline formats and configurable agency contact numbers.
+
+Dates and time
+
+Use clear date formats and Algeria local time for operational schedules; store timestamps
+consistently in the backend.
+
+Payments
+
+Start with manual recording of cash and bank transfers. Add local electronic payment
+integrations only after checking provider eligibility, commercial terms and technical
+documentation.
+
+Documents
+
+Treat passport and identity documents as highly sensitive. Minimize collection, limit access,
+protect storage and define retention/deletion rules.
+
+Legal and tax
+
+Have the agency and its accountant/legal adviser validate contract wording, invoice/receipt
+formats, tax handling, privacy notices and sector-specific requirements.
+
+Hosting
+
+Choose hosting based on data protection, reliability, support, backups, latency and the agency's
+contractual needs.
+
+Connectivity
+
+Optimize for mobile networks and slower connections: compressed images, light pages and
+graceful form recovery.
+
+Do not claim that the software is legally or tax compliant merely because it generates an invoice or stores
+customer data. Confirm the current Algerian requirements with qualified local professionals.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 7
+
+7. Recommended development priorities
+Build a complete, reliable workflow before adding every possible module. The following scope is suitable for a first
+sellable pilot with one agency.
+
+Phase 1 — Sellable MVP
+Priority
+
+Functionality
+
+Acceptance outcome
+
+Must
+
+Public home, about, contact and services
+pages
+
+Agency can publish a professional website with accurate
+contact details.
+
+Must
+
+Travel offers catalogue and offer detail pages
+
+Visitors can browse current offers and understand what is
+included.
+
+Must
+
+Enquiry / booking request form
+
+A submitted request is validated, saved and visible to staff.
+
+Must
+
+Staff login and roles
+
+Only authorized staff can access the back-office.
+
+Must
+
+Customer management
+
+Staff can create, update, search and view customer history.
+
+Must
+
+Offer management
+
+Staff can create, publish, update and archive offers.
+
+Must
+
+Reservation management
+
+Staff can convert an enquiry into a reservation and track its
+status.
+
+Must
+
+Manual payment tracking
+
+Staff can record deposits and instalments and see remaining
+balances.
+
+Must
+
+Basic receipts / confirmation PDF
+
+Staff can generate a printable customer document.
+
+Must
+
+Arabic/French responsive UI
+
+Main public and admin workflows work on desktop and
+mobile.
+
+Should
+
+Basic dashboard and reports
+
+Owner can see active bookings, upcoming trips and
+payment totals.
+
+Should
+
+Private document uploads
+
+Staff can securely attach and retrieve permitted files.
+
+Phase 2 — Operational improvements
+• Group departures, seat capacity and passenger lists.
+• Customer portal and secure document submission.
+• Email notifications and WhatsApp communication workflows.
+• More detailed financial reports, expenses and refunds.
+• Employee assignments, task reminders and audit logs.
+
+Phase 3 — Advanced integrations
+• Online payment provider integration after commercial and technical validation.
+• External hotel, airline, insurance or booking-provider integrations where APIs and agency access are available.
+• Accounting exports, multi-branch support and advanced analytics.
+• Automated document workflows and configurable approval steps.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 8
+
+8. Core business workflows
+8.1 Website enquiry to confirmed reservation
+Step
+
+System behaviour
+
+1. Discover
+
+Visitor opens an offer and reads its dates, price and conditions.
+
+2. Request
+
+Visitor submits a booking/enquiry form.
+
+3. Receive
+
+System creates an enquiry and alerts the agency team.
+
+4. Follow up
+
+Employee contacts the customer, records notes and updates enquiry status.
+
+5. Confirm details
+
+Employee checks availability and requirements with the agency's actual suppliers/processes.
+
+6. Reserve
+
+Employee creates or confirms the reservation and assigns a reference.
+
+7. Payment
+
+Employee records deposit or instalment and generates a receipt.
+
+8. Prepare
+
+Employee tracks required documents and upcoming departure tasks.
+
+9. Complete
+
+Reservation is marked completed, cancelled or otherwise closed with a recorded reason.
+
+8.2 Key business rules
+• An enquiry is not automatically a confirmed booking.
+• A reservation should not be marked confirmed until an authorized employee has checked the agency's required conditions.
+• The remaining balance is calculated from the agreed total minus recorded payments, with refunds and adjustments
+represented explicitly.
+• Every reservation must have a unique reference.
+• Changing an offer price must not silently change the agreed price of an existing reservation.
+• Deleting financial or reservation history should be restricted; prefer cancellation, archive or reversal records.
+• A departure's capacity must be checked before confirming a new place.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 9
+
+9. Non-functional requirements: quality, security and
+reliability
+Category
+
+Requirement
+
+Security
+
+HTTPS in production; password hashing; input validation; protection against common web
+vulnerabilities; secure session/token handling.
+
+Authorization
+
+Enforce permissions on the backend for every protected operation, not only by hiding frontend
+buttons.
+
+Sensitive files
+
+Private file storage, access checks, upload size/type limits, malware scanning where available,
+and no public document links.
+
+Privacy
+
+Collect only necessary personal data; publish a clear privacy notice; define retention and deletion
+procedures.
+
+Auditability
+
+Record important actions such as payment edits, reservation status changes, permission
+changes and document updates.
+
+Backups
+
+Automated database backups, protected backup access and periodically tested restore
+procedures.
+
+Reliability
+
+Handle failed form submissions and notification errors safely; avoid duplicate reservations on
+repeated requests.
+
+Performance
+
+Optimize images, paginate long lists, index commonly searched database fields and avoid
+loading unnecessary data.
+
+Accessibility
+
+Keyboard-friendly forms, readable contrast, labels and clear validation messages.
+
+Maintainability
+
+Use modular code, documented APIs, migrations, automated tests and separate
+development/production settings.
+
+Localization
+
+Support RTL/LTR layouts, translation files, localized dates and consistent currency formatting.
+
+Minimum test scenarios
+• A visitor can submit a valid request; invalid requests show useful validation messages.
+• An unauthorized user cannot open the admin dashboard or call protected API endpoints.
+• An employee cannot view a document or financial record outside their permission scope.
+• A customer cannot access another customer's reservation by changing a URL or identifier.
+• Repeated form submission does not unintentionally create duplicate reservations.
+• Payment totals and outstanding balances remain correct after multiple instalments and refunds.
+• A database backup can be restored in a test environment.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 10
+
+10. Suggested technical structure
+A modular monolith is recommended for the first version: one backend application organized into clear modules, one
+relational database and one frontend. This is easier to build and deploy than microservices while leaving room to scale
+later.
+
+10.1 Suggested backend modules
+Module
+
+Responsibilities
+
+auth
+
+Login, password reset, sessions/tokens, roles and permissions.
+
+agency
+
+Agency profile, branding, branches, contact details and settings.
+
+website_content
+
+Pages, services, destinations, FAQs, images and published content.
+
+offers
+
+Travel packages, departure dates, pricing and publication status.
+
+customers
+
+Customer profiles, traveller details and customer history.
+
+enquiries
+
+Website requests, follow-ups, assignment and status history.
+
+reservations
+
+Bookings, passengers, status, reference and trip association.
+
+payments
+
+Payments, receipts, balances, refunds and financial audit trail.
+
+documents
+
+Protected file metadata, access rules and document status.
+
+notifications
+
+Email/in-app notification records and delivery status.
+
+reports
+
+Aggregated operational and financial summaries.
+
+10.2 Suggested core database entities
+Agency, User, Role, Permission, Branch, WebsitePage, Service, Destination, TravelOffer, Departure, Customer,
+Traveller, Enquiry, EnquiryActivity, Reservation, ReservationTraveller, Payment, Refund, Document, Notification,
+AuditLog.
+Use foreign keys and database constraints for relationships and important business rules. Keep a reservation's agreed
+price as a snapshot so later offer edits do not rewrite historical bookings.
+
+10.3 Suggested technology stack
+Layer
+
+Suggested choice
+
+Frontend
+
+React + TypeScript
+
+Styling / UI
+
+Tailwind CSS and a reusable component library
+
+Backend API
+
+Python + FastAPI
+
+Database
+
+PostgreSQL
+
+ORM / migrations
+
+SQLAlchemy + Alembic
+
+Authentication
+
+Secure cookie-based sessions or carefully implemented access/refresh tokens; role-based
+permissions.
+
+File storage
+
+Private object storage or protected server storage; keep file metadata in PostgreSQL.
+
+PDF generation
+
+HTML-to-PDF or a PDF library for confirmations and receipts.
+
+Deployment
+
+Docker and Docker Compose for the first deployment.
+
+Testing
+
+Pytest for backend; frontend component and end-to-end tests.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 11
+
+11. Features to postpone (avoid making the first version
+too complex)
+• Live flight search, airline ticket issuance and real-time seat inventory.
+• Live hotel inventory and automatic supplier booking.
+• Automatic visa approval predictions or promises.
+• Complex accounting, payroll and tax filing.
+• Native iOS/Android apps; make the website responsive first.
+• AI chatbot, recommendation engine and automatic pricing.
+• Microservices, Kubernetes and complicated distributed infrastructure.
+• Multi-agency marketplace where many agencies sell through one public platform.
+
+These features may be valuable later, but they depend on external providers, legal/commercial agreements or
+substantial operational complexity.
+
+12. Preparing the product to sell to an agency
+A software product sold to an agency needs more than features. It must be configurable, supportable and easy to hand
+over.
+• Agency branding: logo, colors, contact details, office locations and social links.
+• Content control: agency staff can update offers, photos, pages and FAQs without editing code.
+• Deployment and domain setup: production domain, HTTPS, backups and environment configuration.
+• Training: short user guide and onboarding session for the agency's employees.
+• Support: a defined process for bug reports, updates, backups and recovery.
+• Data ownership: clear agreement about who owns customer data, how it can be exported and what happens if the contract
+ends.
+• Commercial terms: setup fee, hosting/maintenance fee, support scope, update policy and any third-party costs.
+• Acceptance testing: run realistic workflows with agency staff before final delivery.
+
+12.1 Suggested acceptance checklist
+• Agency can log in and manage staff accounts.
+• Agency can publish and unpublish a travel offer.
+• A visitor can submit an enquiry from a phone.
+• Staff can convert the enquiry into a reservation.
+• Staff can record multiple payments and produce a receipt.
+• Staff can attach a private document and retrieve it only with permission.
+• Arabic and French layouts display correctly.
+• Owner can view basic booking and payment reports.
+• Backups and restore procedure are demonstrated.
+• Agency staff have tested the system and approved the workflow.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 12
+
+13. Recommended first release
+The best first release is not a complete travel-industry ERP. It is a professional agency website connected to a small but
+dependable operations dashboard.
+Include in first release
+
+Keep for later
+
+Home, about, services, contact and FAQ
+
+Native mobile applications
+
+Travel offers catalogue and detail pages
+
+Live airline and hotel integrations
+
+Enquiry / booking request form
+
+Automated ticket issuance
+
+Staff authentication and roles
+
+Advanced accounting and payroll
+
+Customer and enquiry management
+
+AI chatbot and recommendations
+
+Reservations and status tracking
+
+Multi-agency marketplace
+
+Manual payment records and receipts
+
+Online payment until provider is selected
+
+Basic documents and reports
+
+Complex analytics and automation
+
+Arabic/French responsive design
+
+Additional languages if not needed by pilot
+
+Suggested pilot: configure the system for one real travel agency, enter a small set of real offers, train a few
+employees, and observe how they handle enquiries, reservations and payments. Use their feedback to decide
+what to build next.
+
+14. Assumptions and items to confirm with the agency
+• Which services does the agency actually sell: outbound trips, domestic tourism, Umrah/Hajj, visa assistance, hotels,
+transport or other services?
+• Does the agency need only enquiry forms, or does it already have supplier systems/APIs for confirmed bookings?
+• How does it currently track customers, reservations, deposits, instalments, refunds and expenses?
+• Which documents does it collect, who can access them and how long must they be retained?
+• Which payment methods does it accept, and what receipt/invoice format does its accountant require?
+• Does it have multiple branches, employees and approval steps?
+• Who will update the website offers and content after launch?
+• Does it require Arabic and French from launch, and who will provide/approve translations?
+• What hosting, support, backup and data-export arrangements does the agency expect?
+
+Final product principle: build around the agency's real workflow, not a long feature checklist. A smaller system that staff
+use every day is more valuable than a large system that is difficult to operate.
+This document is a product and technical planning specification, not legal, accounting, tax or regulatory advice. Validate current Algerian
+obligations and third-party integration terms before production use.
+
+Algerian Travel Agency Website — Functional Specification
+
+Page 13
+
+

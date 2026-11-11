@@ -248,6 +248,55 @@ CREATE TABLE IF NOT EXISTS counters (
   seq INT DEFAULT 0 NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_number VARCHAR(50) NOT NULL UNIQUE,
+  customer_id UUID REFERENCES customers(id),
+  reservation_id UUID REFERENCES reservations(id),
+  traveller_id UUID REFERENCES travellers(id),
+  document_type VARCHAR(50) NOT NULL,
+  original_filename VARCHAR(255) NOT NULL,
+  storage_filename VARCHAR(255) NOT NULL UNIQUE,
+  mime_type VARCHAR(100) NOT NULL,
+  file_size_bytes INT NOT NULL,
+  file_sha256 VARCHAR(64) NOT NULL,
+  is_private BOOLEAN DEFAULT TRUE NOT NULL,
+  uploaded_by_user_id UUID REFERENCES users(id),
+  expiry_date TIMESTAMPTZ,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS customer_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id UUID REFERENCES customers(id) NOT NULL,
+  reservation_id UUID REFERENCES reservations(id) NOT NULL,
+  sender_type VARCHAR(20) NOT NULL,
+  sender_id UUID,
+  sender_name VARCHAR(255) NOT NULL,
+  subject VARCHAR(255),
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT FALSE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  type VARCHAR(50) NOT NULL,
+  channel VARCHAR(50) DEFAULT 'in_app' NOT NULL,
+  recipient_type VARCHAR(50) NOT NULL,
+  recipient_id UUID,
+  recipient_contact VARCHAR(255),
+  title VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  data JSONB,
+  status VARCHAR(50) DEFAULT 'pending' NOT NULL,
+  sent_at TIMESTAMPTZ,
+  read_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
 -- Indexes for performance and quick searches
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
@@ -279,6 +328,14 @@ CREATE INDEX IF NOT EXISTS idx_payments_reservation ON payments(reservation_id);
 CREATE INDEX IF NOT EXISTS idx_payments_date ON payments(payment_date);
 CREATE INDEX IF NOT EXISTS idx_refunds_receipt ON refunds(refund_number);
 CREATE INDEX IF NOT EXISTS idx_refunds_reservation ON refunds(reservation_id);
+CREATE INDEX IF NOT EXISTS idx_documents_number ON documents(document_number);
+CREATE INDEX IF NOT EXISTS idx_documents_customer ON documents(customer_id);
+CREATE INDEX IF NOT EXISTS idx_documents_reservation ON documents(reservation_id);
+CREATE INDEX IF NOT EXISTS idx_documents_type ON documents(document_type);
+CREATE INDEX IF NOT EXISTS idx_customer_messages_res ON customer_messages(reservation_id);
+CREATE INDEX IF NOT EXISTS idx_customer_messages_cust ON customer_messages(customer_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_recipient ON notifications(recipient_type, recipient_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_status ON notifications(status);
 `;
 
 export async function migrateDatabase() {

@@ -7,6 +7,7 @@ import {
   detectDuplicates,
   addTraveller,
 } from "../../services/customer.service.js";
+import { generatePortalLink } from "../../services/portal.service.js";
 import { customerSchema, travellerSchema } from "@travel-agency/shared";
 import { authenticate, requirePermission } from "../../middleware/auth.js";
 
@@ -115,6 +116,20 @@ router.post("/:id/travellers", requirePermission("customers:write"), async (req:
 
     const traveller = await addTraveller(req.params.id!, validated, req.user!, ipAddress, userAgent);
     res.status(201).json({ success: true, data: traveller });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/v1/admin/customers/:id/portal-link
+ * Generate or refresh secure customer portal magic link
+ */
+router.post("/:id/portal-link", requirePermission("customers:write"), async (req: Request, res: Response, next) => {
+  try {
+    const expiresInDays = req.body.expiresInDays ? parseInt(req.body.expiresInDays, 10) : 30;
+    const linkInfo = await generatePortalLink(req.params.id!, expiresInDays);
+    res.json({ success: true, data: linkInfo });
   } catch (err) {
     next(err);
   }

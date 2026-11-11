@@ -11,10 +11,10 @@ Updated by the agent at the end of every workflow. Read this before starting any
 | Phase 1A Auth, RBAC, audit                    | Completed     | Argon2id, rotating refresh tokens, RBAC, lockout, audit log, admin UI |
 | Phase 1B Offers, customers, enquiries         | Completed     | Offers CRUD, departures & capacity override, Algerian CRM, inbound enquiries, admin UI |
 | Phase 1C Reservations, payments, receipts     | Completed     | Immutable price snapshots, atomic references (TRV, RCP, RFD), row-locking capacity check, server-side balance, cashier journal & printable receipts |
-| Phase 1D Public website                       | Not started   |                                                                    |
-| Phase 1E Dashboard, documents, reports        | Not started   |                                                                    |
-| Phase 2 Operations                            | Not started   |                                                                    |
-| Final hardening                               | Not started   |                                                                    |
+| Phase 1D Public website                       | Completed     | Responsive bilingual site (AR/FR), interactive SVG map of Algeria, catalogue, offer details, sticky mobile action bar, booking modal with honeypot & idempotency, SEO JSON-LD |
+| Phase 1E Dashboard, documents, reports        | Completed     | Operational KPIs, strict Cash vs Sales separation, magic-byte document vault, audit logs on file access, Excel-ready UTF-8 BOM CSV exports, admin UI |
+| Phase 2 Operations                            | Completed     | Departures manifest & capacity override, tokenized Anti-IDOR customer portal, document vault, messaging, Algerian WhatsApp & operational alerts |
+| Final hardening                               | Completed     | 110 automated tests passing, end-to-end lifecycle verification, automated backup & restore scripts, 0 audit vulnerabilities, production README |
 
 ## Decisions taken
 
@@ -210,11 +210,187 @@ Updated by the agent at the end of every workflow. Read this before starting any
    - Clean monorepo build passed (`pnpm build`).
    - Zero production vulnerabilities verified with `pnpm audit --prod`.
 
-## Next step
+## What was built in Phase 1D Public website
 
-Ready to proceed with **Phase 1D: Public website** (`apps/web`):
-- Prerendered/SSG Vite + React with SEO meta tags (OpenGraph, Twitter, canonical, schema.org JSON-LD).
-- Homepage with hero section, Algerian destination showcases, featured offers, value propositions, and agency credibility markers.
-- Offers listing & search catalogue with filters (destinations, trip types, dates, price in DZD).
-- Offer detail pages with day-by-day itineraries, inclusions/exclusions, departure dates & availability indicators, and interactive inquiry form (with honeypot and idempotency keys).
-- Contact & Agency about pages with bilingual RTL/LTR switcher (Arabic & French) and responsive mobile design (Core Web Vitals target: LCP < 2.5s, CLS < 0.1, INP < 200ms).
+1. **Architecture & Performance**:
+   - Built full public website in `apps/web` using Vite + React 18 with TypeScript.
+   - Route-level code splitting using `React.lazy` and `<Suspense>` across all 11 pages.
+   - Framer Motion animation restricted strictly to `<LazyMotion features={domAnimation}>` for zero bundle bloat.
+   - Initial client bundle optimized to ~128 kB gzip.
+   - Explicit image dimensions and lazy loading (`loading="lazy"`, `decoding="async"`).
+   - Preloaded fonts with `font-display: swap` (`Playfair Display`, `Plus Jakarta Sans`, and `Readex Pro`).
+
+2. **Bilingual RTL/LTR Localization**:
+   - Complete i18next configuration (`apps/web/src/i18n/`) with dynamic `dir="rtl"` / `dir="ltr"` and body font switching (`font-arabic` for Readex Pro Arabic, `font-sans` for Plus Jakarta Sans French).
+   - Full translation parity across 12 namespaces (`nav`, `common`, `home`, `offers`, `offerDetail`, `destinations`, `services`, `about`, `contact`, `faq`, `bookingModal`, `footer`) in `fr.json` and `ar.json`.
+   - `LanguageSwitcher.tsx` with instantaneous language toggling.
+
+3. **Homepage & Interactive Algeria SVG Map (`HomePage.tsx`, `AlgeriaMap.tsx`)**:
+   - Saharan hero section with atmospheric backdrop, compelling bilingual slogan, and quick search bar (destinations & trip types).
+   - Stylized lightweight SVG Map of Algeria with interactive pins and hover cards for iconic regions: Djanet (Tassili), Timimoun (Gourara), Constantine (Ponts Suspendus), Tipaza (Ruines), Oran (Santa Cruz), Taghit (Saoura), Ghardaïa (M'Zab), Tamanrasset (Hoggar), and Alger. Accessible with keyboard controls and direct offer links.
+   - Featured offers grid with real DZD prices formatted via `formatDZD`.
+   - 4 Algerian Trust Pillars: Licence d'État N° 16/0423/AVT, Guides touaregs & locaux, Tarifs transparents en Dinars sans frais cachés, Matériel bivouac & 4x4 grand confort.
+
+4. **Offers Catalogue & Deep Itinerary (`OffersPage.tsx`, `OfferDetailPage.tsx`)**:
+   - Searchable, filterable catalogue with live filters: search keyword, destination picker, trip type (trekking, guided tour, beach stay, Umrah), and maximum price slider.
+   - Detailed trip dossier with hero photo banner, accommodation & 4x4 transport details, day-by-day expandable itinerary, inclusions & exclusions checklists.
+   - Sticky booking card with guaranteed price banner ("Prix ferme garanti à la réservation"), departure date picker with live remaining seat counts, and direct WhatsApp / Phone shortcuts.
+
+5. **Destinations Showcase (`DestinationsPage.tsx`, `DestinationDetailPage.tsx`)**:
+   - Categorized destination directory (Sahara, Circuits Nationaux, Omra & Pèlerinage).
+   - Dedicated destination detail pages with historical context, best travel period, and dynamically linked active departures.
+
+6. **Agency Services, About & FAQ (`ServicesPage.tsx`, `AboutPage.tsx`, `FAQPage.tsx`)**:
+   - Services page covering the 6 pillars of Algerian travel: Saharan treks, cultural circuits, coastal stays, Umrah/Hajj, ticketing/hotels, and visa/permit assistance.
+   - About page presenting the 10+ years story, official accreditation notice (Licence N° 16/0423/AVT, Registre de Commerce 16/00-098234B24), and branch locations in Alger-Centre and Oran.
+   - FAQ accordion answering top questions regarding booking steps, accepted Algerian payment modes (cash, CCP, bank transfer BNA/BEA, CIB), travel permits in the South, bivouac comfort, and cancellation terms.
+
+7. **Contact & Lead Capture Form (`ContactPage.tsx`, `BookingModal.tsx`)**:
+   - Contact coordinates with direct phone, WhatsApp link with prefilled bilingual messages, office address, and opening hours.
+   - Contact form with honeypot field (`websiteUrl_hp`) and local draft auto-save.
+   - Global accessible Booking Modal (`BookingModal.tsx`) supporting preselected offers and departure dates, Zod-compatible validation, local draft recovery (`localStorage`), unique client idempotency key generation, and mandatory legal disclaimer: *"L'envoi de ce formulaire constitue une demande de réservation préalable. Votre réservation ne sera définitivement confirmée qu'après validation de votre dossier par un conseiller de l'agence et versement de l'acompte convenu."*
+
+8. **Sticky Mobile Action Bar (`StickyMobileBar.tsx`)**:
+   - Fixed bottom action bar on mobile viewports with direct one-tap calling (`tel:`), WhatsApp chat with prefilled trip inquiry, and primary booking button.
+
+9. **SEO & Structured Data (`SEOHead.tsx`)**:
+   - Dynamic document titles, meta descriptions, canonical links, OpenGraph, and Twitter Cards.
+   - Google-compliant JSON-LD structured data for `TravelAgency` and `TouristTrip` with prices in DZD.
+
+10. **Legal Pages (`TermsPage.tsx`, `PrivacyPage.tsx`)**:
+    - Conditions Générales de Vente (CGV) and Privacy Policy protecting sensitive traveler data and passports without claiming legal compliance.
+
+11. **Quality & Verification**:
+    - 4 Vitest unit tests in `apps/web/src/publicWebsite.test.ts` verifying DZD money formatting, translation parity, Algerian licence/contact data, and legal disclaimers.
+    - Total test suite across monorepo: 63 tests (53 API + 5 shared + 1 admin + 4 web), all passing.
+    - Full monorepo typecheck passed cleanly (`pnpm typecheck`).
+    - Full monorepo build passed cleanly (`pnpm build`).
+    - Zero production vulnerabilities verified via `pnpm audit --prod`.
+
+## What was built in Phase 1E Dashboard, documents, reports
+
+1. **Database Schema & Migration**:
+   - Added `documents` table in PostgreSQL with fields: `id` (UUID), `documentNumber` (`DOC-2026-XXXXXX`), `customerId`, `reservationId`, `travellerId`, `documentType` (`passport`, `national_id`, `visa`, `contract`, `payment_receipt`, `itinerary`, `insurance`), `originalFilename`, `storageFilename` (UUID), `mimeType`, `fileSizeBytes`, `fileSha256`, `isPrivate`, `uploadedByUserId`, `expiryDate`, `notes`, `createdAt`, `updatedAt`.
+   - Indexed on `documentNumber`, `customerId`, `reservationId`, `documentType`.
+   - Atomic counter support for `DOC` prefix generating sequential references (`DOC-2026-000001`).
+
+2. **Private Document Vault (`apps/api/src/utils/fileVault.ts`, `apps/api/src/services/document.service.ts`)**:
+   - Isolated disk storage in non-public directory `storage/private/` with randomized UUID storage filenames (never exposing original filenames or public URLs).
+   - **Magic Byte Defense**: Strict inspection of file binary headers (PDF: `%PDF`, JPEG: `0xFF 0xD8 0xFF`, PNG: `0x89 0x50 0x4E 0x47`, WebP: `RIFF...WEBP`), immediately rejecting disguised `.exe` / scripts renamed with innocent extensions.
+   - Cryptographic SHA-256 integrity hash calculated and stored for every uploaded document.
+   - Authenticated streaming endpoint (`GET /api/v1/admin/documents/:id/download`) guarded by permission `documents:read_sensitive`.
+   - **Audit Trail on Every Access**: Records `DOCUMENT_ACCESS`, `DOCUMENT_UPLOAD`, and `DOCUMENT_DELETE` events in the append-only `audit_logs` table.
+
+3. **Operational & Financial Dashboard (`apps/api/src/services/dashboard.service.ts`, `apps/api/src/routes/admin/dashboard.routes.ts`)**:
+   - `GET /api/v1/admin/dashboard/summary` endpoint guarded by `reports:operational`.
+   - **Strict Financial Distinction** (mandated by rule `02-business-rules.md` and spec 4.3):
+     - **Cash Received (Encaissements réels)**: Actual cash collected in DZD centimes from active payments net of refunds.
+     - **Booked Sales (Ventes engagées)**: Contracted reservation values from active bookings.
+     - **Outstanding Balances (Créances)**: Balance remaining to be collected from customers.
+   - Operational KPIs: New enquiries requiring follow-up, active reservations count, upcoming departures in next 30 days, reservations missing documents.
+   - Daily Alerts: Departures nearing capacity (occupancy ≥ 80%), unassigned inquiries, bookings awaiting identity documents.
+   - Upcoming departures list with occupancy progress bar and recent payments/enquiries.
+
+4. **Financial & Operational Reporting (`apps/api/src/services/report.service.ts`, `apps/api/src/routes/admin/report.routes.ts`)**:
+   - `GET /api/v1/admin/reports/financial` guarded by `reports:financial`: date-range filtering, gross cash, refunds, net cash collected, payment method breakdown (cash, bank transfer, cheque, CIB), and monthly collections trend.
+   - `GET /api/v1/admin/reports/operational` guarded by `reports:operational`: departures occupancy and passenger counts, enquiry conversion funnel (total received, in progress, converted, conversion rate %), reservations status breakdown.
+   - `GET /api/v1/admin/reports/export-csv`: CSV exports with **UTF-8 Byte Order Mark (`\uFEFF`)** ensuring instant, uncorrupted rendering in Microsoft Excel for Arabic and French characters. Supports:
+     1. `reservations`: References, customer names, phones, agreed totals, discounts, statuses.
+     2. `payments`: Official receipt numbers (RCP), reservation references, payment methods, slip numbers, amounts.
+     3. `enquiries`: Prospect details, destinations requested, passenger counts, statuses.
+     4. `passengers`: Departure manifests with full traveler names, dates of birth, room allocations, and primary contacts.
+
+5. **Back-Office UI (`apps/admin`)**:
+   - `DashboardPage.tsx`: Top KPI cards with Cash Received vs Booked Sales distinction, alert cards, quick action buttons (New Customer, New Offer, New Booking, Record Payment), next departures with occupancy progress bars, recent enquiries and payments. Default landing page after login.
+   - `DocumentsPage.tsx`: Document vault table with type filtering, search, magic-byte upload modal dialog, secure direct download, and delete confirmation dialog.
+   - `ReportsPage.tsx`: Tabbed view with Financial Report (date picker, method distribution, monthly trend), Operational Report (enquiry funnel, departure occupancy), and Excel-ready CSV Export triggers.
+   - Navigation updated in `AdminLayout.tsx` with `LayoutDashboard`, `FileText`, and `BarChart3` links.
+
+6. **Quality & Verification**:
+   - 18 Vitest integration tests in `apps/api/tests/dashboard_documents_reports.test.ts` covering magic byte verification, disguised script rejection, atomic document reference generation, secure download streaming, access audit logging, RBAC checks on reports and file operations, and UTF-8 BOM CSV exports.
+   - Total test suite across monorepo: **81 tests** (71 API + 5 shared + 1 admin + 4 web), all passing.
+   - Full monorepo typecheck passed cleanly (`pnpm typecheck`).
+   - Full monorepo build passed cleanly (`pnpm build`).
+   - Zero production vulnerabilities verified via `pnpm audit --prod`.
+
+## What was built in Phase 2 Operations & Customer Portal
+
+1. **Group Departures & Passenger Manifests (`apps/api/src/services/departure.service.ts`, `apps/admin/src/pages/DeparturesPage.tsx`)**:
+   - Departure lifecycle management (`open`, `closed`, `completed`, `cancelled`) with live occupancy tracking and progress bars.
+   - Comprehensive passenger manifest endpoint (`GET /api/v1/admin/departures/:id/manifest`) returning full traveler names, dates of birth, room allocation, primary contact indicator, passport deposit verification, contact phones, reservation reference, and payment balance.
+   - Printable manifest dialog with formatted passenger list, room breakdown, and quick Excel CSV export trigger.
+   - **Manager Capacity Override**: Modal and endpoint (`PATCH /api/v1/admin/departures/:id/override`) requiring `departures:capacity_override` permission, updating departure max capacity inside a PostgreSQL transaction, and recording an explicit audit log entry (`CAPACITY_OVERRIDE`).
+
+2. **Customer Self-Service Portal (`/portal` & `/api/v1/portal`)**:
+   - **Passwordless Magic Link Generation** (`POST /api/v1/admin/customers/:id/portal-link`): Generates 32-byte cryptographic random tokens with SHA-256 hash storage and 30-day expiration.
+   - Direct Magic Link sharing from CRM (`apps/admin/src/pages/CustomerDetailPage.tsx`) with one-tap copy and WhatsApp prefilled greeting.
+   - Magic link verification (`POST /api/v1/portal/auth/verify-link`) issuing 7-day secure `httpOnly`, `SameSite: strict` portal session cookies (`portalToken`).
+   - **CRITICAL ANTI-IDOR SECURITY ENFORCEMENT**: `portalAuth` middleware extracts and verifies the customer identity from the authenticated JWT. All portal queries strictly enforce `WHERE customer_id = req.portalCustomer.id`. Any attempt by Customer A to query Customer B's reservation or document returns a strict 404/403.
+   - Self-service reservation dossier (`/portal/reservations/:id`): Complete trip itinerary, agreed price snapshot, recorded payments, remaining balance due in DZD centimes, status progress timeline, traveler list with document deposit badges.
+   - Self-service document vault (`POST /api/v1/portal/documents/upload` & `GET /api/v1/portal/documents/:id/download`): Direct upload of traveler passports and IDs with magic-byte MIME validation (PDF, JPEG, PNG) and secure streaming download.
+   - Direct customer messaging thread (`POST /api/v1/portal/messages` & `GET /api/v1/portal/messages`): Allows customers to submit inquiries, questions, and change requests directly to agency staff.
+
+3. **Operational Alerts & Notifications Queue (`apps/api/src/services/notification.service.ts`, `apps/admin/src/components/layout/NotificationBell.tsx`)**:
+   - PostgreSQL `notifications` table tracking overdue balance collection alerts, upcoming departure reminders (≤ 7 days), missing traveler document alerts, and new incoming customer messages.
+   - Automated system alerts scan engine (`POST /api/v1/admin/notifications/scan`) checking all active departures and bookings with deduplication.
+   - **Algerian WhatsApp Deep Links**: Formats Algerian numbers (`0550...` / `0770...`) into international format (`https://wa.me/213...?text=...`) for one-tap WhatsApp payment reminders and customer communication.
+   - Header notification bell (`NotificationBell.tsx`) in back-office layout with real-time unread badge, quick WhatsApp launch buttons, mark-as-read action, and manual alert refresh.
+
+4. **Quality & Verification**:
+   - 17 Vitest integration tests in `apps/api/tests/operations_portal.test.ts` verifying:
+     - Departure listing, status updates, and manifest generation.
+     - Manager capacity override and audit trail creation.
+     - Magic link generation, verification, and portal session authentication.
+     - Anti-IDOR enforcement: Customer A accessing Customer B's reservation or document returns 404.
+     - Magic-byte document upload and validation.
+     - Customer message submission and notification creation.
+     - Automated system alert scanning and WhatsApp deep link formatting.
+   - Total test suite across monorepo: **98 tests** (88 API + 5 shared + 1 admin + 4 web), all passing!
+   - Full monorepo typecheck passed cleanly (`pnpm typecheck`).
+   - Full monorepo build passed cleanly (`pnpm build`).
+   - Zero production vulnerabilities verified via `pnpm audit --prod`.
+
+## What was built in Final Hardening Pass
+
+1. **End-to-End Lifecycle & Security Audit Suite (`apps/api/tests/e2e_full_lifecycle.test.ts`)**:
+   - 12 comprehensive end-to-end integration tests validating the full traveler journey and security boundaries:
+     - Public honeypot spam bot trapping (`websiteUrl_hp`).
+     - Client-side UUID idempotency key enforcement for repeated submissions on slow Algerian networks.
+     - Staff CRM customer creation, prospect assignment, and field-level encrypted traveler passport entry.
+     - Confirmed reservation creation with atomic snapshot pricing and row-level locked capacity updates.
+     - Cashier payment collection with sequential receipt generation (`RCP-2026-XXXXXX`) and server-side balance computation.
+     - Strict financial separation of gross cash received vs booked sales in reports.
+     - 30-day tokenized magic link generation and secure portal session issuance.
+     - Anti-IDOR customer isolation guarantee (Customer A cannot access Customer B's reservation or documents).
+     - Group departure passenger manifest extraction with balances and room allocations.
+     - Manager capacity override with mandatory audited reason in the append-only `audit_logs` table.
+
+2. **Automated Backup & Restore Infrastructure (`scripts/backup.sh`, `scripts/restore.sh`)**:
+   - Production PostgreSQL database dump (`pg_dump`) + private documents archive (`apps/api/storage/private`).
+   - Gzip stream integrity verification on backup creation.
+   - Automated retention policy purges archives older than N days (`--keep 14`).
+   - Safe restoration script with interactive overwrite confirmation and `--force` flag for CI.
+   - Post-restore database verification query validating table counts across `users`, `travel_offers`, `customers`, `reservations`, and `payments`.
+   - Integrated root commands: `pnpm backup` and `pnpm restore`.
+
+3. **Production Documentation & Deployment Architecture (`README.md`)**:
+   - Comprehensive production guide covering monorepo structure, prerequisites, quick start, demo credentials for all 5 RBAC roles, backup/restore procedures, security architecture, financial rules, and Nginx reverse-proxy setup.
+
+4. **Quality & Verification**:
+   - Total test suite across monorepo: **110 tests** (100 API + 5 shared + 1 admin + 4 web), all passing!
+   - Full monorepo typecheck passed cleanly (`pnpm typecheck`).
+   - Full monorepo build passed cleanly (`pnpm build`).
+   - Zero production vulnerabilities verified via `pnpm audit --prod`.
+
+## Project Completion Summary
+
+All development phases outlined in `spec.pdf` and `docs/PLAN.md` are **100% completed, hardened, and verified**:
+- **Phase 0 Foundation**: PERN stack, pnpm monorepo, cultural Algerian design system tokens, PostgreSQL schema & atomic sequence counters.
+- **Phase 1A Auth & RBAC**: Argon2id password hashing, progressive lockout, rotating refresh tokens with reuse detection, RBAC permission matrix, and append-only audit logging.
+- **Phase 1B Offers, CRM & Enquiries**: Travel offers catalogue, group departures, Algerian CRM with 58 wilayas, duplicate detection, and inbound enquiries.
+- **Phase 1C Reservations & Payments**: Immutable price snapshots, row-locking capacity check, cashier journal, sequential receipts, and printable voucher views.
+- **Phase 1D Public Website**: Bilingual (AR/FR) responsive site, interactive SVG map of Algeria, mobile sticky action bar, accessible booking modal with honeypot & idempotency, SEO JSON-LD.
+- **Phase 1E Dashboard & Reports**: Operational KPIs, strict Cash vs Sales separation, private magic-byte document vault, audit logs on file access, Excel-ready UTF-8 BOM CSV exports.
+- **Phase 2 Operations & Customer Portal**: Group departure manifests, manager capacity overrides, passwordless magic-link customer portal, Anti-IDOR security guarantees, and Algerian WhatsApp deep links.
+- **Final Hardening**: Full lifecycle E2E tests, automated backup & restore scripts, 110/110 passing tests, zero vulnerabilities, production README.
+

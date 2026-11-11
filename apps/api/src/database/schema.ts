@@ -296,6 +296,60 @@ export const auditLogs = pgTable("audit_logs", {
 
 // 14. Atomic Counters (Sequences)
 export const counters = pgTable("counters", {
-  id: varchar("id", { length: 50 }).primaryKey(), // e.g. "TRV-2026", "RCP-2026"
+  id: varchar("id", { length: 50 }).primaryKey(), // e.g. "TRV-2026", "RCP-2026", "DOC-2026"
   seq: integer("seq").default(0).notNull(),
 });
+
+// 15. Documents & Files Vault (Private Storage)
+export const documents = pgTable("documents", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  documentNumber: varchar("document_number", { length: 50 }).notNull().unique(), // e.g. "DOC-2026-000001"
+  customerId: uuid("customer_id").references(() => customers.id),
+  reservationId: uuid("reservation_id").references(() => reservations.id),
+  travellerId: uuid("traveller_id").references(() => travellers.id),
+  documentType: varchar("document_type", { length: 50 }).notNull(), // 'passport' | 'national_id' | 'visa' | 'contract' | 'payment_receipt' | 'itinerary' | 'insurance'
+  originalFilename: varchar("original_filename", { length: 255 }).notNull(),
+  storageFilename: varchar("storage_filename", { length: 255 }).notNull().unique(),
+  mimeType: varchar("mime_type", { length: 100 }).notNull(),
+  fileSizeBytes: integer("file_size_bytes").notNull(),
+  fileSha256: varchar("file_sha256", { length: 64 }).notNull(),
+  isPrivate: boolean("is_private").default(true).notNull(),
+  uploadedByUserId: uuid("uploaded_by_user_id").references(() => users.id),
+  expiryDate: timestamp("expiry_date", { withTimezone: true }),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+// 16. Customer Portal Messages / Questions
+export const customerMessages = pgTable("customer_messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  customerId: uuid("customer_id").references(() => customers.id).notNull(),
+  reservationId: uuid("reservation_id").references(() => reservations.id).notNull(),
+  senderType: varchar("sender_type", { length: 20 }).notNull(), // 'customer' | 'staff'
+  senderId: uuid("sender_id"), // userId if staff, null if customer
+  senderName: varchar("sender_name", { length: 255 }).notNull(),
+  subject: varchar("subject", { length: 255 }),
+  message: text("message").notNull(),
+  isRead: boolean("is_read").default(false).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+// 17. Operational Notifications Queue
+export const notifications = pgTable("notifications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  type: varchar("type", { length: 50 }).notNull(), // 'payment_due' | 'departure_reminder' | 'missing_documents' | 'new_enquiry' | 'customer_message' | 'capacity_alert'
+  channel: varchar("channel", { length: 50 }).default("in_app").notNull(), // 'in_app' | 'email' | 'whatsapp'
+  recipientType: varchar("recipient_type", { length: 50 }).notNull(), // 'staff' | 'customer'
+  recipientId: uuid("recipient_id"), // userId or customerId
+  recipientContact: varchar("recipient_contact", { length: 255 }), // phone or email
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  data: jsonb("data").$type<Record<string, any>>(),
+  status: varchar("status", { length: 50 }).default("pending").notNull(), // 'pending' | 'sent' | 'read' | 'failed'
+  sentAt: timestamp("sent_at", { withTimezone: true }),
+  readAt: timestamp("read_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+

@@ -89,3 +89,17 @@ export const departureSchema = z.object({
 });
 
 export type DepartureInput = z.infer<typeof departureSchema>;
+
+export const departureStatusSchema = z.object({
+  status: z.enum(["open", "closed", "completed", "cancelled"]),
+});
+
+export type DepartureStatusInput = z.infer<typeof departureStatusSchema>;
+
+export const overrideDepartureCapacitySchema = z.object({
+  extraPlaces: z.coerce.number().int().min(1, "Extra places must be positive"),
+  reason: z.string().min(3, "Reason for override is required"),
+});
+
+export type OverrideDepartureCapacityInput = z.infer<typeof overrideDepartureCapacitySchema>;
+

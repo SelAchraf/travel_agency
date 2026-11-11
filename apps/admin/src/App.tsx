@@ -15,11 +15,29 @@ const ForgotPasswordPage = React.lazy(() =>
 const ResetPasswordPage = React.lazy(() =>
   import("./pages/ResetPasswordPage.js").then((m) => ({ default: m.ResetPasswordPage }))
 );
+const DashboardPage = React.lazy(() =>
+  import("./pages/DashboardPage.js").then((m) => ({ default: m.DashboardPage }))
+);
+const DocumentsPage = React.lazy(() =>
+  import("./pages/DocumentsPage.js").then((m) => ({ default: m.DocumentsPage }))
+);
+const ReportsPage = React.lazy(() =>
+  import("./pages/ReportsPage.js").then((m) => ({ default: m.ReportsPage }))
+);
 const StaffUsersPage = React.lazy(() =>
   import("./pages/StaffUsersPage.js").then((m) => ({ default: m.StaffUsersPage }))
 );
 const OffersListPage = React.lazy(() =>
   import("./pages/OffersListPage.js").then((m) => ({ default: m.OffersListPage }))
+);
+const DeparturesPage = React.lazy(() =>
+  import("./pages/DeparturesPage.js").then((m) => ({ default: m.DeparturesPage }))
+);
+const PortalAuthPage = React.lazy(() =>
+  import("./pages/portal/PortalAuthPage.js").then((m) => ({ default: m.PortalAuthPage }))
+);
+const PortalReservationPage = React.lazy(() =>
+  import("./pages/portal/PortalReservationPage.js").then((m) => ({ default: m.PortalReservationPage }))
 );
 const CustomersListPage = React.lazy(() =>
   import("./pages/CustomersListPage.js").then((m) => ({ default: m.CustomersListPage }))
@@ -77,11 +95,33 @@ export function App() {
 
               {/* Protected Staff & Admin Pages */}
               <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute requiredPermission="reports:operational">
+                    <AdminLayout>
+                      <DashboardPage />
+                    </AdminLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
                 path="/admin/offers"
                 element={
                   <ProtectedRoute requiredPermission="offers:read">
                     <AdminLayout>
                       <OffersListPage />
+                    </AdminLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/departures"
+                element={
+                  <ProtectedRoute requiredPermission="offers:read">
+                    <AdminLayout>
+                      <DeparturesPage />
                     </AdminLayout>
                   </ProtectedRoute>
                 }
@@ -154,6 +194,28 @@ export function App() {
               />
 
               <Route
+                path="/admin/documents"
+                element={
+                  <ProtectedRoute>
+                    <AdminLayout>
+                      <DocumentsPage />
+                    </AdminLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/reports"
+                element={
+                  <ProtectedRoute>
+                    <AdminLayout>
+                      <ReportsPage />
+                    </AdminLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
                 path="/admin/users"
                 element={
                   <ProtectedRoute requiredPermission="users:manage">
@@ -185,9 +247,14 @@ export function App() {
                 }
               />
 
+              {/* Customer Portal Public & Magic Link Routes */}
+              <Route path="/portal" element={<PortalAuthPage />} />
+              <Route path="/portal/my-bookings" element={<PortalReservationPage />} />
+              <Route path="/portal/reservations/:id" element={<PortalReservationPage />} />
+
               {/* Default Redirection */}
-              <Route path="/" element={<Navigate to="/admin/users" replace />} />
-              <Route path="*" element={<Navigate to="/admin/users" replace />} />
+              <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
             </Routes>
           </Suspense>
         </BrowserRouter>

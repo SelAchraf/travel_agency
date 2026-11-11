@@ -25,6 +25,9 @@ import {
   AlertCircle,
   RefreshCw,
   Globe,
+  Copy,
+  Check,
+  Key,
 } from "lucide-react";
 
 interface Traveller {
@@ -91,6 +94,36 @@ export function CustomerDetailPage() {
   const [travellerSpecialReqs, setTravellerSpecialReqs] = useState("");
   const [travellerLoading, setTravellerLoading] = useState(false);
   const [travellerError, setTravellerError] = useState<string | null>(null);
+
+  // Portal Link Modal State
+  const [portalModalOpen, setPortalModalOpen] = useState(false);
+  const [portalLink, setPortalLink] = useState("");
+  const [portalGenerating, setPortalGenerating] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleGeneratePortalLink = async () => {
+    if (!id) return;
+    try {
+      setPortalGenerating(true);
+      const res = await apiClient<{ success: boolean; data: { rawToken: string; expiresAt: string } }>(
+        `/admin/customers/${id}/portal-link`,
+        { method: "POST", body: JSON.stringify({ expiresInDays: 30 }) }
+      );
+      const link = `${window.location.origin}/portal?token=${res.data.rawToken}`;
+      setPortalLink(link);
+      setPortalModalOpen(true);
+    } catch (err: any) {
+      alert(err.message || "Impossible de générer le lien de l'espace client");
+    } finally {
+      setPortalGenerating(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(portalLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const fetchCustomer = async () => {
     if (!id) return;
@@ -250,6 +283,18 @@ export function CustomerDetailPage() {
               <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
               <span>WhatsApp</span>
             </a>
+            {hasPermission("customers:write") && (
+              <button
+                type="button"
+                onClick={handleGeneratePortalLink}
+                disabled={portalGenerating}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-900 text-xs font-semibold border border-indigo-200 transition-colors"
+                title="Générer un lien magique d'accès direct au portail client"
+              >
+                <Key className="w-3.5 h-3.5 text-indigo-700" />
+                <span>{portalGenerating ? "Génération..." : "Espace Client"}</span>
+              </button>
+            )}
           </div>
         </div>
       </Card>
@@ -486,6 +531,71 @@ export function CustomerDetailPage() {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* CUSTOMER PORTAL MAGIC LINK MODAL */}
+      <Modal
+        isOpen={portalModalOpen}
+        onClose={() => setPortalModalOpen(false)}
+        title="Lien Sécurisé - Portail Client"
+        description="Ce lien magique permet au client d'accéder directement à son dossier de réservation, téléverser ses documents et suivre ses paiements sans mot de passe."
+      >
+        <div className="space-y-4 pt-2">
+          <div className="p-3 bg-sand-50 rounded-lg border border-sand-200">
+            <label className="block text-xs font-semibold text-sand-700 mb-1">
+              Lien magique (valide 30 jours)
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                readOnly
+                value={portalLink}
+                className="flex-1 px-3 py-2 text-xs font-mono bg-white border border-sand-300 rounded-lg text-indigo-950 select-all"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={copyToClipboard}
+                className="shrink-0 text-xs"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600 me-1" />
+                    Copié !
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5 me-1" />
+                    Copier
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-2">
+            <a
+              href={`https://wa.me/${customer?.phone.replace(/\D/g, "")}?text=${encodeURIComponent(
+                `Bonjour ${customer?.fullName},\nVoici l'accès direct et sécurisé à votre espace client pour consulter votre voyage et déposer vos documents :\n${portalLink}`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              Envoyer par WhatsApp
+            </a>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPortalModalOpen(false)}
+            >
+              Fermer
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

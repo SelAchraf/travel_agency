@@ -16,6 +16,9 @@ import {
   payments,
   refunds,
   auditLogs,
+  documents,
+  customerMessages,
+  notifications,
 } from "./schema.js";
 import { hashPassword } from "../utils/password.js";
 import { logger } from "../utils/logger.js";
@@ -27,6 +30,9 @@ export async function seedDatabase() {
   await migrateDatabase();
 
   // Clear existing demo data in reverse FK order
+  await db.delete(notifications);
+  await db.delete(customerMessages);
+  await db.delete(documents);
   await db.delete(auditLogs);
   await db.delete(refunds);
   await db.delete(payments);
